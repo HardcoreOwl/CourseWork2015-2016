@@ -65,7 +65,7 @@ namespace FilterCreator
             { AllCustomFilters = new List<CustomFilter>(); }
             string qwerty = @"lena.bmp";
             MainImage = (Bitmap)Bitmap.FromFile(qwerty);
-
+            prevBmp = (Bitmap)MainImage.Clone();
         }
 
         public void DeSer()
@@ -75,6 +75,7 @@ namespace FilterCreator
                 AllCustomFilters = (List<CustomFilter>)ser.Deserialize(fs);
             }
         }
+
         public void Ser()
         {
             using (FileStream fs = new FileStream("CustomFilters.bin", FileMode.OpenOrCreate))
@@ -170,7 +171,7 @@ namespace FilterCreator
                             FourierP(ff.Fourier);
                             break;
                         }
-                    case "Грейскейл": 
+                    case "Грейскеил": 
                         {
                             Grayscale(); 
                             break;
@@ -182,7 +183,7 @@ namespace FilterCreator
                         }
                     case "Яркость": 
                         { 
-                            Brightness(f.Params[0]); 
+                            Brightness((int)f.Params[0]); 
                             break; 
                         }
                     case "Контраст": 
