@@ -73,7 +73,11 @@ namespace FilterCreator
             get;
             set;
         }
-
+        public int Power
+        {
+            get;
+            set;
+        }
     }
 
 }

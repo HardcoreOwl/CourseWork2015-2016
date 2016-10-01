@@ -53,6 +53,8 @@
             this.createNewFilterBut = new System.Windows.Forms.Button();
             this.complexFbox = new System.Windows.Forms.GroupBox();
             this.addChangeBut = new System.Windows.Forms.Button();
+            this.Cbut = new System.Windows.Forms.Button();
+            this.DeleteCustomBut = new System.Windows.Forms.Button();
             this.mylinf_group.SuspendLayout();
             this.new_linear_f.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -188,7 +190,7 @@
             this.изображениеToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(848, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(854, 24);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -204,7 +206,7 @@
             // openImage_but
             // 
             this.openImage_but.Name = "openImage_but";
-            this.openImage_but.Size = new System.Drawing.Size(132, 22);
+            this.openImage_but.Size = new System.Drawing.Size(152, 22);
             this.openImage_but.Text = "Открыть";
             this.openImage_but.Click += new System.EventHandler(this.openImage_but_Click);
             // 
@@ -212,7 +214,7 @@
             // 
             this.сохранитьToolStripMenuItem.Enabled = false;
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click);
             // 
@@ -241,7 +243,7 @@
             // 
             this.Namel.Location = new System.Drawing.Point(661, 37);
             this.Namel.Name = "Namel";
-            this.Namel.Size = new System.Drawing.Size(149, 20);
+            this.Namel.Size = new System.Drawing.Size(164, 20);
             this.Namel.TabIndex = 25;
             this.Namel.Text = "Новый фильтр";
             // 
@@ -256,9 +258,9 @@
             // 
             // saveFilter
             // 
-            this.saveFilter.Location = new System.Drawing.Point(715, 445);
+            this.saveFilter.Location = new System.Drawing.Point(716, 63);
             this.saveFilter.Name = "saveFilter";
-            this.saveFilter.Size = new System.Drawing.Size(120, 30);
+            this.saveFilter.Size = new System.Drawing.Size(120, 27);
             this.saveFilter.TabIndex = 27;
             this.saveFilter.Text = "Сохранить фильтр";
             this.saveFilter.UseVisualStyleBackColor = true;
@@ -266,9 +268,9 @@
             // 
             // MFl
             // 
-            this.MFl.Location = new System.Drawing.Point(533, 481);
+            this.MFl.Location = new System.Drawing.Point(521, 473);
             this.MFl.Name = "MFl";
-            this.MFl.Size = new System.Drawing.Size(302, 21);
+            this.MFl.Size = new System.Drawing.Size(211, 21);
             this.MFl.TabIndex = 28;
             this.MFl.SelectedIndexChanged += new System.EventHandler(this.MFl_SelectedIndexChanged);
             // 
@@ -284,9 +286,9 @@
             // 
             // createNewFilterBut
             // 
-            this.createNewFilterBut.Location = new System.Drawing.Point(521, 56);
+            this.createNewFilterBut.Location = new System.Drawing.Point(521, 63);
             this.createNewFilterBut.Name = "createNewFilterBut";
-            this.createNewFilterBut.Size = new System.Drawing.Size(106, 23);
+            this.createNewFilterBut.Size = new System.Drawing.Size(116, 27);
             this.createNewFilterBut.TabIndex = 31;
             this.createNewFilterBut.Text = "Создать";
             this.createNewFilterBut.UseVisualStyleBackColor = true;
@@ -300,7 +302,7 @@
             this.complexFbox.Controls.Add(this.freqbox);
             this.complexFbox.Controls.Add(this.new_linear_f);
             this.complexFbox.Enabled = false;
-            this.complexFbox.Location = new System.Drawing.Point(521, 82);
+            this.complexFbox.Location = new System.Drawing.Point(521, 99);
             this.complexFbox.Name = "complexFbox";
             this.complexFbox.Size = new System.Drawing.Size(315, 357);
             this.complexFbox.TabIndex = 30;
@@ -317,11 +319,33 @@
             this.addChangeBut.UseVisualStyleBackColor = true;
             this.addChangeBut.Click += new System.EventHandler(this.addChangeBut_Click);
             // 
+            // Cbut
+            // 
+            this.Cbut.Location = new System.Drawing.Point(738, 462);
+            this.Cbut.Name = "Cbut";
+            this.Cbut.Size = new System.Drawing.Size(98, 32);
+            this.Cbut.TabIndex = 32;
+            this.Cbut.Text = "Использовать";
+            this.Cbut.UseVisualStyleBackColor = true;
+            this.Cbut.Click += new System.EventHandler(this.Cbut_Click);
+            // 
+            // DeleteCustomBut
+            // 
+            this.DeleteCustomBut.Location = new System.Drawing.Point(606, 500);
+            this.DeleteCustomBut.Name = "DeleteCustomBut";
+            this.DeleteCustomBut.Size = new System.Drawing.Size(126, 32);
+            this.DeleteCustomBut.TabIndex = 33;
+            this.DeleteCustomBut.Text = "Удалить фильтр";
+            this.DeleteCustomBut.UseVisualStyleBackColor = true;
+            this.DeleteCustomBut.Click += new System.EventHandler(this.DeleteCustomBut_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(848, 514);
+            this.ClientSize = new System.Drawing.Size(854, 544);
+            this.Controls.Add(this.DeleteCustomBut);
+            this.Controls.Add(this.Cbut);
             this.Controls.Add(this.complexFbox);
             this.Controls.Add(this.createNewFilterBut);
             this.Controls.Add(this.MFl);
@@ -373,6 +397,8 @@
         private System.Windows.Forms.Button addChangeBut;
         private System.Windows.Forms.Button furier_but;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button Cbut;
+        private System.Windows.Forms.Button DeleteCustomBut;
     }
 }
 

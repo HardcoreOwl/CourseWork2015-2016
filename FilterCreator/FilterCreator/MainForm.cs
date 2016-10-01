@@ -58,10 +58,14 @@ namespace FilterCreator
             {
                 DeSer(); 
                 MFl.DataSource = AllCustomFilters;
-                MFl.DisplayMember = "CustomFilterName"; //CustomFilter.CustomFilterName;
+                MFl.DisplayMember = "CustomFilterName";
+                
             }
             catch (Exception)
             { AllCustomFilters = new List<CustomFilter>(); }
+            string qwerty = @"lena.bmp";
+            MainImage = (Bitmap)Bitmap.FromFile(qwerty);
+
         }
 
         public void DeSer()
@@ -103,64 +107,6 @@ namespace FilterCreator
             pixel_box.SelectedIndex = 0;
         }
 
-      
-        //public double[,] Convoluate(double[,] a, double[,] b)
-        //{
-        //    int wofs = b.GetLength(0)/2; int hofs =b.GetLength(1)/2;
-        //    int w = a.GetLength(0);
-        //    int h = a.GetLength(1);
-        //    double[,] Outa = new double[w,h];
-            
-        //    //double r = Math.Sqrt(Math.Pow((wofs),2)+Math.Pow(hofs,2));
-        //    double[,] Temp = new double[w+wofs+1,h+hofs+1];
-        //    for(int i=wofs;i<w+wofs;i++)
-        //        for(int j=hofs;j<h+hofs;j++)
-        //        {
-        //            double value=0;
-        //            for (int k = 0; k < b.GetLength(0); k++)
-        //                for (int l = 0; l < b.GetLength(1); l++)
-        //                    value += Temp[i - k, j - l] * b[k, l];
-        //        }
-
-        //    for(int i=0;i<w;i++)
-        //        for(int j=0;j<h;j++)
-        //        {
-        //            Outa[i, j] = Temp[i + wofs + 1, j + hofs + 1];
-        //        }
-        //    return Outa;
-        //}
-
-    //    public void UseFilter(Filter f)
-    //    {
-
-    //        if (f is ConvFilter) ConvolutionFilter(((ConvFilter)f));
-    //        if (f is Pix)
-    //        {
-    //            Pix p = (Pix)f;
-    //            if (f.name == "Грейскеил") Grayscale();
-    //            if (f.name == "Негатив") Invert();
-    //            if (f.name == "Яркость")
-    //            {
-    //                Brightness((int)p.Pars[0]);
-    //            }
-    //            if (f.name == "Гамма")
-    //            {
-    //                Gamma(p.Pars[0], p.Pars[1], p.Pars[2]);
-    //            }
-    //            if (f.name == "Цвет")
-    //            {
-    //                Colorr(p.Pars[0], p.Pars[1], p.Pars[2]);
-    //            }
-
-    //            if (f.name == "Контраст")
-    //            {
-
-    //                Brightness((int)p.Pars[0]);
-    //            }
-    //        }
-    //}
-           //Добавить запоминание
-
         private void saveFilter_Click(object sender, EventArgs e)
         {
             complexFbox.Enabled = false;
@@ -170,6 +116,8 @@ namespace FilterCreator
             LastFilter = new Filter();
             Ser();
             DeSer();
+            MFl.DataSource = AllCustomFilters;
+            this.Invalidate();
         }
 
         private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -179,6 +127,7 @@ namespace FilterCreator
                 string saveFilePath = si.FileName;
                 if (System.IO.File.Exists(saveFilePath))
                     System.IO.File.Delete(saveFilePath);
+                MainImage.Save(saveFilePath);
             }
         }
 
@@ -192,6 +141,7 @@ namespace FilterCreator
         private void createNewFilterBut_Click(object sender, EventArgs e)
         {
             complexFbox.Enabled = true;
+            freqbox.Enabled = true;
             addChangeBut.Enabled = false;
             if (!CheckPow(MainImage.Width) || !CheckPow(MainImage.Height)) freqbox.Enabled = false;
         }
@@ -202,7 +152,65 @@ namespace FilterCreator
             prevBmp = (Bitmap)MainImage.Clone();
         }
 
+        private void UseCustomFilter(CustomFilter c)
+        {
+            foreach (Filter f in c.MyFilter)
+            {
+                if((!CheckPow(MainImage.Width)||!CheckPow(MainImage.Height))&&f.Name=="Частотный фильтр")
+                {
+                    MessageBox.Show("Входное изображение не подходит для обработки этим фильтром!");
+                    MainImage = (Bitmap)prevBmp.Clone();
+                    break;
+                }
+                switch (f.Name)
+                {
+                    case "Частотный фильтр":
+                        {
+                            FastFourier ff = new FastFourier(MainImage, f.Range, f.Pass, f.Style, f.Power);
+                            FourierP(ff.Fourier);
+                            break;
+                        }
+                    case "Грейскейл": 
+                        {
+                            Grayscale(); 
+                            break;
+                        }
+                    case "Негатив":
+                        { 
+                            Invert(); 
+                            break;
+                        }
+                    case "Яркость": 
+                        { 
+                            Brightness(f.Params[0]); 
+                            break; 
+                        }
+                    case "Контраст": 
+                        { 
+                            Contrast((sbyte)f.Params[0]); 
+                            break; 
+                        }
+                    case "Гамма": 
+                        {
+                            Gamma(f.Params[0], f.Params[1], f.Params[2]); 
+                            break; 
+                        }
+                    case "Цвет": 
+                        { 
+                            Colorr(f.Params[0], f.Params[1], f.Params[2]); 
+                            break; 
+                        }
+                    default:
+                        {
+                            ConvolutionFilter(f);
+                            break;
+                        }
+                }
+            }
+        }
+
         # region Fourier region
+
         private bool CheckPow(int a)
         {
             bool q = true;
@@ -289,7 +297,8 @@ namespace FilterCreator
         #region Matrix region
         private void ConvolutionBox_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-
+            MainImage = (Bitmap)prevBmp.Clone();
+            this.Invalidate();
             int p = ConvolutionBox.SelectedIndex;
             if (p != 0)
             {
@@ -752,7 +761,32 @@ namespace FilterCreator
 
         private void MFl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
+        }
 
+        private void Cbut_Click(object sender, EventArgs e)
+        {
+            if (MainImage != default(Bitmap))
+            {
+                try
+                {
+                    UseCustomFilter(AllCustomFilters[MFl.SelectedIndex]);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Что-то пошло не так!");
+                }
+                this.Invalidate();
+            }
+        }
+
+        private void DeleteCustomBut_Click(object sender, EventArgs e)
+        {
+            AllCustomFilters.Remove(AllCustomFilters[MFl.SelectedIndex]);
+            Ser();
+            DeSer();
+            MFl.DataSource = AllCustomFilters;
+            this.Invalidate();
         }
         
     }

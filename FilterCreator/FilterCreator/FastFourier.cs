@@ -13,11 +13,9 @@ namespace FilterCreator
     public class FastFourier
     {
         public Bitmap Image;
-        public int[,] GR,GG,GB;
+        public int[][,] GG = new int[3][,];
         public static int wd, hg;
         public Complex[][,] Fourier = new Complex[3][,];
-        //public Complex[,] GFourier = new Complex[hg, wd];
-        //public Complex[,] BFourier = new Complex[hg, wd];
         protected int range, style, power;
         public bool pass;
 
@@ -36,9 +34,9 @@ namespace FilterCreator
 
         private void ReadImage()
         {
-            GR = new int[hg, wd];
-            GG = new int[hg, wd];
-            GB = new int[hg, wd];
+            GG[0] = new int[hg, wd];
+            GG[1] = new int[hg, wd];
+            GG[2] = new int[hg, wd];
             BitmapData bitmapData1 = Image.LockBits(new Rectangle(0, 0, Image.Width, Image.Height),
                                      ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
             unsafe
@@ -49,9 +47,9 @@ namespace FilterCreator
                 {
                     for (int j = 0; j < bitmapData1.Width; j++)
                     {
-                        GB[i, j] = imagePointer1[0];
-                        GG[i, j] = imagePointer1[1];
-                        GR[i, j] = imagePointer1[2];
+                        GG[0][i, j] = imagePointer1[0];
+                        GG[1][i, j] = imagePointer1[1];
+                        GG[2][i, j] = imagePointer1[2];
                         imagePointer1 += 3;
                     }
                     imagePointer1 += bitmapData1.Stride - (bitmapData1.Width * 3);
@@ -105,21 +103,17 @@ namespace FilterCreator
             for (int i = 0; i < hg; i++)
                 for (int j = 0; j < wd; j++)
                 {
-                    Fourier[0][i, j] = GB[i, j] * (Math.Pow(-1, i + j + 1)); 
-                    Fourier[1][i, j] = GG[i, j] * (Math.Pow(-1, i + j + 1));
-                    Fourier[2][i, j] = GR[i, j] * (Math.Pow(-1, i + j + 1)); 
+                    for (int q = 0; q < 3;q++ )
+                        Fourier[q][i, j] = GG[q][i, j] * (Math.Pow(-1, i + j + 1)); 
                 }
             Complex[][,] t = fft2d(Fourier,true);
-            //t = Shift(t);
             t = Filt(t);
-            //t = Shift(t);
             Fourier = fft2d(t,false);
             for (int i = 0; i < hg; i++)
                 for (int j = 0; j < wd; j++)
                 {
-                    Fourier[0][i, j] = Fourier[0][i, j].Real * (Math.Pow(-1, i + j + 1));
-                    Fourier[1][i, j] = Fourier[1][i, j].Real * (Math.Pow(-1, i + j + 1));
-                    Fourier[2][i, j] = Fourier[2][i, j].Real * (Math.Pow(-1, i + j + 1));
+                    for (int q = 0; q < 3; q++)
+                        Fourier[q][i, j] = Fourier[q][i, j].Real * (Math.Pow(-1, i + j + 1));
                 }
            
         }
